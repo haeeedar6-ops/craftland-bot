@@ -141,6 +141,7 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     out = BytesIO(modified)
     out.name = f"modified_{doc.file_name}"
     out.seek(0)
+    await msg.reply_document(out, filename=out.name, caption="تم تعديل الملف بنجاح ✅")
 async def add_uid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if await is_spam(update):
         return
