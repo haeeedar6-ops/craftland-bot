@@ -30,10 +30,10 @@ user_last_time = {}
 SPAM_COOLDOWN = 25 # المؤقت: 25 ثانية بين كل ملف والثاني لجميع المستخدمين
 
 async def is_spam(update) -> bool:
-user_id = update.effective_user.id
-current_time = time.time()
+    user_id = update.effective_user.id
+    current_time = time.time()
 
-if user_id in user_last_time:
+    if user_id in user_last_time:
 elapsed = current_time - user_last_time[user_id]
 if elapsed < SPAM_COOLDOWN:
 remaining = int(SPAM_COOLDOWN - elapsed)
