@@ -8,7 +8,22 @@
 from io import BytesIO
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, ContextTypes, filters
+import os
+from http.server import HTTPServer, BaseHTTPRequestHandler
+import threading
 
+class HealthCheckHandler(BaseHTTPRequestHandler):
+def do_GET(self):
+self.send_response(200)
+self.end_headers()
+self.wfile.write(b"OK")
+
+def start_health_check():
+port = int(os.environ.get("PORT", 10000))
+server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+server.serve_forever()
+
+threading.Thread(target=start_health_check, daemon=True).start()
 # -----------------------------------
 BOT_TOKEN = "8614201867:AAGKvJzlZSDQYQ9S8uQG6-JXsPU4U7xZJ00"  # ضع توكن بوتك هنا
 MAX_FILE_SIZE = 25 * 1024 * 1024   # 25MB كحد أقصى
