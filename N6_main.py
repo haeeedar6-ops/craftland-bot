@@ -146,12 +146,8 @@ async def add_uid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if await is_spam(update):
         return
     if not update.message.document:
-    await msg.reply_document(out, filename=out.name, caption="تم حذف UID بنجاح ✅")
-
-    if not update.message.document:
-        await update.message.reply_text("أرسل أولاً ملفًا معدّلًا (modified_...).")
+        await update.message.reply_text("أرسل أولاً ملفاً معدلاً (modified_...).")
         return
-
     doc = update.message.document
     file = await context.bot.get_file(doc.file_id)
     bio = BytesIO()
