@@ -24,6 +24,24 @@ def start_health_check():
     server.serve_forever()
 
 threading.Thread(target=start_health_check, daemon=True).start()
+import time
+
+user_last_time = {}
+SPAM_COOLDOWN = 25 # المؤقت: 25 ثانية بين كل ملف والثاني لجميع المستخدمين
+
+async def is_spam(update) -> bool:
+user_id = update.effective_user.id
+current_time = time.time()
+
+if user_id in user_last_time:
+elapsed = current_time - user_last_time[user_id]
+if elapsed < SPAM_COOLDOWN:
+remaining = int(SPAM_COOLDOWN - elapsed)
+await update.message.reply_text(f"⚠️ يرجى الانتظار {remaining} ثانية قبل إرسال ملف جديد.")
+return True
+
+user_last_time[user_id] = current_time
+return False
 # -----------------------------------
 BOT_TOKEN = "8614201867:AAGKvJzlZSDQYQ9S8uQG6-JXsPU4U7xZJ00"  # ضع توكن بوتك هنا
 MAX_FILE_SIZE = 25 * 1024 * 1024   # 25MB كحد أقصى
@@ -93,6 +111,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if await is_spam(update):
+        return
     msg = update.message
     doc = msg.document
     if not doc:
@@ -121,10 +141,12 @@ async def handle_file(update: Update, context: ContextTypes.DEFAULT_TYPE):
     out = BytesIO(modified)
     out.name = f"modified_{doc.file_name}"
     out.seek(0)
+async def add_uid(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if await is_spam(update):
+        return
+    if not update.message.document:
     await msg.reply_document(out, filename=out.name, caption="تم حذف UID بنجاح ✅")
 
-
-async def add_uid(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message.document:
         await update.message.reply_text("أرسل أولاً ملفًا معدّلًا (modified_...).")
         return
