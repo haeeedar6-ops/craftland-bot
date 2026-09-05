@@ -13,10 +13,10 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 import threading
 
 class HealthCheckHandler(BaseHTTPRequestHandler):
-def do_GET(self):
-self.send_response(200)
-self.end_headers()
-self.wfile.write(b"OK")
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"OK")
 
 def start_health_check():
 port = int(os.environ.get("PORT", 10000))
