@@ -34,14 +34,14 @@ async def is_spam(update) -> bool:
     current_time = time.time()
 
     if user_id in user_last_time:
-elapsed = current_time - user_last_time[user_id]
-if elapsed < SPAM_COOLDOWN:
-remaining = int(SPAM_COOLDOWN - elapsed)
-await update.message.reply_text(f"⚠️ يرجى الانتظار {remaining} ثانية قبل إرسال ملف جديد.")
-return True
+        elapsed = current_time - user_last_time[user_id]
+        if elapsed < SPAM_COOLDOWN:
+            remaining = int(SPAM_COOLDOWN - elapsed)
+            await update.message.reply_text(f"⚠️ يرجى الانتظار {remaining} ثانية قبل إرسال ملف جديد.")
+            return True
 
-user_last_time[user_id] = current_time
-return False
+    user_last_time[user_id] = current_time
+    return False
 # -----------------------------------
 BOT_TOKEN = "8614201867:AAGKvJzlZSDQYQ9S8uQG6-JXsPU4U7xZJ00"  # ضع توكن بوتك هنا
 MAX_FILE_SIZE = 25 * 1024 * 1024   # 25MB كحد أقصى
