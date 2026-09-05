@@ -19,9 +19,9 @@ class HealthCheckHandler(BaseHTTPRequestHandler):
         self.wfile.write(b"OK")
 
 def start_health_check():
-port = int(os.environ.get("PORT", 10000))
-server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
-server.serve_forever()
+    port = int(os.environ.get("PORT", 10000))
+    server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+    server.serve_forever()
 
 threading.Thread(target=start_health_check, daemon=True).start()
 # -----------------------------------
